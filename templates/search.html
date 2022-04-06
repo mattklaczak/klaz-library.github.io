@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Search books{% endblock %}
+
+{% block main %}
+	<p>To search for a particular book, enter either:
+		<ul>
+			<li>The book's <strong>title</strong></li>
+			<li>The book's <strong>author</strong></li>
+			<li>A <strong>keyword</strong> involving the book</li>
+		</ul>
+	<p><em>You may search using one, two or all three of the aspects. Case is insenstive.</em>
+	<h2>{{ self.title() }}</h2>
+
+	{% if error %}
+		<div class="error"><strong>Error:</strong> {{ error }}</div>
+	{% endif %}
+
+	<form action="" method="post">
+		<dl>
+			<dt>Search by title <em>(entire word must match. Example, "world" would find "War of the Worlds" but "wor" would not)</em>:
+			<dd><input type="text" name="search_title" size="30" value="{{ request.form.search_title }}">
+			<dt>Search by author <em>(entire word must match)</em>:
+			<dd><input type="text" name="search_author" size="30" value="{{ request.form.search_author }}">
+			<dt>Search by keyword <em>(partial matches returned. Example, "rex" would find "Rexasaurus")</em>:
+			<dd><input type="text" name="search_keyword" size="30" value="{{ request.form.search_keyword }}">
+		</dl>
+		<input class='generic-button' type="submit" value="Search">
+	</form>
+
+	{% if books %}
+		<h3>Search results:</h3>
+		<table border = 1 style = "width:100%">
+		<tr>
+			<th>Book Title</th>
+			<th>Book Author</th>
+		</tr>
+		{% for key in books %}	
+		<tr>
+			<td>{{ key.title }}</td>
+			<td>{{ key.author }}</td>
+		</tr>
+		{% endfor %}
+		</table>
+	{% endif %}
+
+{% endblock %}

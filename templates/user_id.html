@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}{{ u.username }}{% endblock %}
+
+{% block main %}
+	<h2>{{ self.title() }}'s account</h2>
+
+	{% if error %}
+		<div class="error"><strong>Error:</strong> {{ error }}</div>
+	{% endif %}
+
+	<h3>Name: {{ u.username }}</h3>
+	<h3>E-mail: {{ u.email }}</h3>
+	<h3>Date added: {{ u.timeadded }}</h3>
+	<h3>Last login: {{ u.lastlogin }}</h3>
+	<p><em>Currently borrowing:
+	<ol>{% for book in b %}
+		<li>{{ book.title }}</li>
+	{% endfor %}</ol></em>
+	<form method="post"><button class='delete-button' type="submit" name="deleted_user" value={{u.username}}>Delete this user</button></form>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block main %}
+	
+
+	{% if error %}
+		<div class="error"><strong>Error:</strong> {{ error }}</div>
+	{% endif %}
+	<p><em>Here you can view a list of patrons and librarians in the system. The default order is by descending username but you can change that via query strings (i.e., /accounts/sort?=username_descending) or via the buttons below.  There is also a form for registering new librarians below.</em>
+
+	<h4>List of current patrons:</h4>
+	<ol>{% for p in pats %}
+		<li><a href="{{ url_for('accounts', user_id=p.user_id) }}">{{ p.username }}</a></li>
+	{% endfor %}</ol>
+
+	<h4>List of current librarians:</h4>
+	<ol>{% for l in libs %}
+		<li><a href="{{ url_for('accounts', user_id=l.user_id) }}">{{ l.username }}</a></li>
+	{% endfor %}</ol>
+
+	<div class='order_by_list'>
+	<h4>Order users by username:</h4><ul>
+	<li><a href="{{ url_for('user_list_descend') }}">Username (descending)</a></li>
+	<li><a href="{{ url_for('user_list_ascend') }}">Username (ascending)</a></li>
+	</ul>
+	<h4>Order users by e-mail:</h4><ul>
+	<li><a href="{{ url_for('user_list_e_descend') }}">E-mail (descending)</a></li>
+	<li><a href="{{ url_for('user_list_e_ascend') }}">E-mail (ascending)</a></li>
+	</ul>
+
+	<h4>Order users by date added:</h4><ul>
+	<li><a href="{{ url_for('user_list_dateadded_longest') }}">Date added (longest)</a></li>
+	<li><a href="{{ url_for('user_list_dateadded_shortest') }}">Date added (shortest)</a></li>
+	</ul>
+	<h4>Order users by last log-in:</h4><ul>
+	<li><a href="{{ url_for('user_list_login_mostrecent') }}">Last log-in (most recent)</a></li>
+	<li><a href="{{ url_for('user_list_login_leastrecent') }}">Last log-in (least recent)</a></li>
+	</ul>
+	</div>
+
+	<h2>Register a new librarian</h2>
+	<form action="" method="post">
+		<dl>
+			<dt>Username:
+			<dd><input type="text" name="username" size="30" value="{{ request.form.username }}">
+			<dt>E-Mail:
+			<dd><input type="text" name="email" size="30" value="{{ request.form.email }}">
+			<dt>Password:
+			<dd><input type="password" name="password" size="30">
+			<dt>Password <small>(repeat)</small>:
+			<dd><input type="password" name="password2" size="30">
+		</dl>
+		<input class='generic-button' type="submit" value="Register Librarian">
+	</form>
+{% endblock %}

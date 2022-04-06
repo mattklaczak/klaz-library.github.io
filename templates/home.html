@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block main %}
+	{# neat! you can actually "call" other blocks like methods... since they are. #}
+	
+	{% if not g.user %}
+	<h4><em>Welcome, guest!</h4></em>
+	{% elif g.user %}
+	<h4><em>Welcome back, {{ g.user.username }}!</h4></em>
+	{% endif %}
+
+	{# this is the basic test we're using to see if someone is logged in.
+		you'll have to extend this logic further... #}
+
+	{% if g.user and not g.user.librarian %}
+		<p>If you would like to borrow/return a book, simply click the corresponding button to the left of the desired book. You can also search books via the link 'Search books' at the top of the page titled <a href="{{ url_for('search') }}"><em>Search books</em></a>.
+	{% elif g.user and g.user.librarian %}
+		<p>Below is the list of available books. Click a specific book to be taken to that book's page and view more details about it. <br /><br />To view both patron and other librarian accounts, please visit the link at the top of the page titled <a href="{{ url_for('accounts') }}"><em>Accounts</em>.</a><br /><br />To add a new book to the library, please click the link at the top of the page titled <a href="{{ url_for('books') }}"><em>Manage Books</em>.  </a>
+	{% else %}
+		<p>This is the home page of the mck70's Librarybot website! If you are not already a member, we would love for you to sign-up!*<br /><br />To sign-up for an account, click <a href="{{ url_for('register') }}"><em>here</em>.</a><br /><br />If you are already a member, you can sign-in <a href="{{ url_for('login') }}"><em>here</em>.</a>.<br /><br /><em>*We here at Librarybot almost *never* suffer data leaks! We swear!<br /></p></em>
+	
+	{% endif %}
+	<p><em>Current available books:</em>
+	<!-- IS A LIBRARIAN -->
+	{% if g.user.librarian %}
+	<div id="id_book_list">
+	<table border = 1 style = "width:100%">
+		<tr>
+			<th># of Rentals</th>
+			<th>Book Title</th>
+			<th>Book Author</th>
+		</tr>
+		{% for key in books %}	
+		<tr>
+			<td>{{ key.borrowed_by.all() | length }}</td>
+			<td><a href="{{ url_for('books', book_id=key.book_id) }}"><em>{{ key.title }}</em></a></td>
+			<td>{{ key.author }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<!-- NOT A LIBRARIAN BUT IS A USER -->
+	{% elif g.user %}
+	<table border = 1 style = "width:100%">
+		<tr>
+			<th>Book Title</th>
+			<th>Book Author</th>
+		</tr>
+		{% for key in books %}	
+		<tr>
+			<!-- check to see if the user can rent or return, then display appropriate button -->
+			{% if key in g.user.borrows %}
+				<td><form method="post"><button class='return-button' type="submit" name="book_id" value={{key.book_id}}>Return <a href="{{ url_for('books', book_id=key.book_id) }}"></a></button> {{ key.title }}</form></td>
+			{% else %}
+				<td><form method="post"><button class='rent-button' type="submit" name="book_id" value={{key.book_id}}>Rent <a href="{{ url_for('books', book_id=key.book_id) }}"></a></button> {{ key.title }}</form></td>
+			{% endif %}
+			<td>{{ key.author }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+	<!-- NOT A LIBRARIAN NOT A USER JUST A GUEST-->
+	<table border = 1 style = "width:100%">
+		<div id="id_book_list">
+		<tr>
+			<th>Book Title</th>
+			<th>Book Author</th>
+		</tr>
+		{% for key in books %}	
+		<tr>
+			<td><em>{{ key.title }}</em></td>
+			<td>{{ key.author }}</td>
+		</tr>
+		{% endfor %}
+	</div>
+	</table>
+	</div>
+	{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Book Details{% endblock %}
+
+{% block main %}
+	{# neat! you can actually "call" other blocks like methods... since they are. #}
+	<h3>Book Title: <em>{{ b.title }}</em></h3>
+	<h3>Book Author: <em>{{ b.author }}</em></h3>
+	<h3>Patrons Borrowing:</h3>
+	<ol>{% for pat in p %}
+		<li>{{ pat }}</li>
+	{% endfor %}</ol>
+{% endblock %}

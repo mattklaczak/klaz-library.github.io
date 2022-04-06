@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}User List{% endblock %}
+
+{% block main %}
+	
+
+	{% if error %}
+		<div class="error"><strong>Error:</strong> {{ error }}</div>
+	{% endif %}
+	
+	<h4>List of current patrons:</h4>
+	<ol>{% for p in pats %}
+		<li><a href="{{ url_for('accounts', user_id=p.user_id) }}">{{ p.username }}</a></li>
+	{% endfor %}</ol>
+
+	<h4>List of current librarians:</h4>
+	<ol>{% for l in libs %}
+		<li><a href="{{ url_for('accounts', user_id=l.user_id) }}">{{ l.username }}</a></li>
+	{% endfor %}</ol>
+	<div class='order_by_list'>
+	<h4>Order users by username:</h4><ul>
+	<li><a href="{{ url_for('user_list_descend') }}">Username (descending)</a></li>
+	<li><a href="{{ url_for('user_list_ascend') }}">Username (ascending)</a></li>
+	</ul>
+	<h4>Order users by e-mail:</h4><ul>
+	<li><a href="{{ url_for('user_list_e_descend') }}">E-mail (descending)</a></li>
+	<li><a href="{{ url_for('user_list_e_ascend') }}">E-mail (ascending)</a></li>
+	</ul>
+
+	<h4>Order users by date added:</h4><ul>
+	<li><a href="{{ url_for('user_list_dateadded_longest') }}">Date added (longest)</a></li>
+	<li><a href="{{ url_for('user_list_dateadded_shortest') }}">Date added (shortest)</a></li>
+	</ul>
+	<h4>Order users by last log-in:</h4><ul>
+	<li><a href="{{ url_for('user_list_login_mostrecent') }}">Last log-in (most recent)</a></li>
+	<li><a href="{{ url_for('user_list_login_leastrecent') }}">Last log-in (least recent)</a></li>
+	</ul>
+	</div>
+	<a href="{{ url_for('accounts') }}">Return to accounts</a>
+
+{% endblock %}

@@ -1,0 +1,121 @@
+/************************************************************
+  Style sheet for virtual library website
+  Matthew Klaczak
+  mck70@pitt.edu
+*************************************************************/
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	background: #59719F;
+	font-family: 'Segoe UI', sans-serif;
+	font-size: 125%;
+}
+
+body {
+	background: #DCDCDC;
+	border: 1px solid #333;
+	width: 900px;
+	margin: 1em auto;
+	padding: 0.7em;
+}
+
+h1 {
+	margin-top: 0;
+}
+
+a {
+	color: #A2001C;
+	font-weight: bold;
+}
+
+a:hover {
+	color: #AD364B;
+}
+
+#id_book_list {
+	font-family: 'Cambria Math', sans-serif;  
+}
+
+.order_by_list {
+	font-size: 80%;  
+}
+.rent-button {
+font-family: 'Impact';
+font-size: 135%;
+color: #e6e6e6;
+background: #006600;
+}
+
+.rent-button:hover {
+font-family: 'Impact';
+font-size: 135%;
+color: #e6e6e6;
+background: #990000;
+}
+
+.return-button {
+font-family: 'Impact';
+font-size: 135%;
+color: #e6e6e6;
+background: #990000;
+}
+
+.return-button:hover {
+font-family: 'Impact';
+font-size: 135%;
+color: #e6e6e6;
+background: #006600;
+}
+
+.generic-button {
+font-family: 'Impact';
+font-size: 135%;
+color: #e6e6e6;
+background: #339966;
+}
+
+.delete-button {
+font-family: 'Impact';
+font-size: 135%;
+color: #e6e6e6;
+background: #990000;
+}
+/*************************************************************
+  Nav bar
+*************************************************************/
+
+nav > ul {
+	list-style-type: none;
+	padding-left: 0;
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+nav > ul > li {
+	padding: 0 0.5em;
+}
+
+/* The A ~ B selector means "select any B that comes after an A. In this case,
+it selects all list items *except the first* inside the navbar's list. */
+nav > ul > li ~ li {
+	border-left: 1px solid #444;
+}
+
+/*************************************************************
+  Inputs
+*************************************************************/
+
+input, button {
+	/* "inherit" means "whatever the enclosing element's font size is."
+	Actually most (all?) CSS properties can be "inherit"! */
+	font-size: inherit;
+}
+
+
+/* This is an attribute selector. Very useful for styling inputs. */
+input[type="text"], input[type="password"] {
+	border-radius: 5px;
+}

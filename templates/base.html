@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<title>{% block title %}Welcome{% endblock %} - mck70's Librarybot!</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+	<header>
+		<h1>mck70's Librarybot</h1>
+		<nav>
+			<ul>
+				<li><a href="{{ url_for('home') }}">Home</a>
+
+				{% if g.user%}
+					<li><a href="{{ url_for('search') }}">Search books</a>
+					{% if g.user.librarian %}
+						<li><a href="{{ url_for('books') }}">Manage Books</a>
+						<li><a href="{{ url_for('accounts') }}">Accounts</a>
+					{% endif %}
+					<li><a href="{{ url_for('logout') }}">Sign out [{{ g.user.username }}]</a>
+				{% else %}
+					<li><a href="{{ url_for('register') }}">Become a patron!</a>
+					<li><a href="{{ url_for('login') }}">Sign in</a>
+				{% endif %}
+			</ul>
+		</nav>
+
+		{% with flashes = get_flashed_messages() %}
+			{% if flashes %}
+				<ul class="flashes">
+				{% for message in flashes %}
+					<li>{{ message }}
+				{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}
+	</header>
+
+	
+
+	<main>
+		{% block main %}
+			Hmm... no content here. Don't forget to put a "main" block in your template.
+		{% endblock %}
+	</main>
+
+	<footer>
+		<br />Librarytron &copy; 2019 Matthew Klaczak
+	</footer>
+</body>
+</html>
