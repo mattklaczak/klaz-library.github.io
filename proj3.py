@@ -88,21 +88,21 @@ def logout():
 	session.pop('user_id', None)
 	return redirect(url_for('home'))
 
-#####################################
-# other page routes
-#####################################
+################################################
+# Other page routes
+################################################
 
 # The home page shows a listing of books
 @app.route('/', methods=['GET', 'POST'])
 def home():
-	############### RENT/RETURN button pushed /HOME page ###############
+	# 'Rent' or 'Return' button pushed on /home page
 	if request.method == 'POST':
 		bid = request.form.get('book_id')
 		someBook = Book.query.filter_by(book_id=bid).first()
-		############### WANT TO RETURN ###############
+		# Wants to return a book
 		if someBook in g.user.borrows:
 			g.user.borrows.remove(someBook)
-		############### WANT TO RENT ###############
+		# Wants to rent a book
 		elif someBook is not None:
 		 	g.user.borrows.append(someBook)
 	db.session.commit()
@@ -113,12 +113,12 @@ def home():
 @app.route('/books/', methods=['GET', 'POST'])
 @app.route('/books/<book_id>', methods=['GET', 'POST'])
 def books(book_id=None):
-	############### Not a librarian ###############
+	# If not a librarian (administrator)
 	if g.user is None or g.user.librarian is False:
 		return redirect(url_for('home'))
-	############### GENERIC /BOOKS/<BOOK_id> page ###############
+	# Generic /books/<book_id> page
 	if book_id is None:
-		############### CREATION button pushed /BOOKS/<BOOK_ID> page ###############
+		# 'Create Book' button pushed on /books/<book_id> page
 		if request.method == 'POST':
 			btitle = request.form.get('title')
 			bauthor = request.form.get('author')
@@ -130,13 +130,13 @@ def books(book_id=None):
 			else:
 				flash('Sorry, that book is already in the library.')
 		return render_template('new_book.html')
-	############### SPECIFIC  BOOKS/<BOOK_ID> page ###############
+	# Specific books/<book_id> page
 	else:
 		book = Book.query.filter_by(book_id=book_id).first()
-		############### NO BOOK FOUND page ###############
+		# 'No Book Found' page
 		if book is None:
 			abort(404)
-		############### POPULATE ALL WHO ARE RENTING ###############
+		# Populate all who are renting
 		else:
 			Users = User.query.all()
 			patrons = []
@@ -149,14 +149,14 @@ def books(book_id=None):
 @app.route('/accounts/', methods=['GET', 'POST'])
 @app.route('/accounts/<user_id>', methods=['GET', 'POST'])
 def accounts(user_id=None):
-	############### Not a librarian ###############
+	# If not a libraian
 	if g.user is None or g.user.librarian is False:
 		return redirect(url_for('home'))
-	############### GENERIC /accounts page ###############
+	# Generic /accounts page
 	if user_id is None:
 		error = None
 		if request.method == 'POST':
-			############### LIBRARIAN CREATION BUTTON ###############
+			# Create librarian button
 			# check for form contents for creating a librarian 
 			if not request.form['username']:
 				error = 'You have to enter a username'
@@ -181,13 +181,13 @@ def accounts(user_id=None):
 			# in case an 'error' occured with the form
 			return render_template('accounts.html', error=error)
 		else:
-			############### GET METHOD ###############
+			# HTTP GET method
 			patrons = User.query.order_by(User.username).filter_by(librarian=False).all()
 			librarians = User.query.order_by(User.username).filter_by(librarian=True).all()
 			return render_template('accounts.html', pats=patrons, libs=librarians)
-	############### SPECIFIC /accounts/<user_id> page ###############
+	# Specific /accounts/<user_id> page
 	else:
-		############### DELETE button pushed /accounts/<user_id> page ###############
+		# Delete button pushed /accounts/<user_id> page
 		if request.method == 'POST':
 			userToDelete = request.form.get('deleted_user')
 			if userToDelete == 'owner':
@@ -199,7 +199,7 @@ def accounts(user_id=None):
 				flash('Account successfully deleted.')
 				return redirect(url_for('accounts'))
 		else:
-			############### GET METHOD /accounts/<user_id> page ###############
+			# HTTP GET method /accounts/<user_id> page
 			user = User.query.filter_by(user_id=user_id).first()
 			if user is None:
 				abort(404) # no valid user
@@ -210,7 +210,7 @@ def accounts(user_id=None):
 					userHas.append(book)
 			return render_template('user_id.html', u=user, b=userHas)
 
-# routes for the 'search books' portion
+# Method that routes for the 'search books' portion, returns page with found books
 @app.route('/search', methods=['GET', 'POST'])
 def search(user_id=None):
 	if request.method == 'POST':
@@ -252,43 +252,43 @@ def search(user_id=None):
 	else:
 		return render_template('search.html')
 
-############ THE ORDER BY FUNCTIONS/ROUTES ############
-############ ROUTE BY USERNAME ASCENDING ############
+# 'Order by' routing methods
+# Method to route by username alphabetically ASCENDING
 @app.route('/accounts/sort?=username_ascending', methods=['GET', 'POST'])
 def user_list_ascend():
 	return order_by(User.username.desc())
 
-############ ROUTE BY USERNAME DESCENDING ############
+# Method to route by username alphabetically DESCENDING
 @app.route('/accounts/sort?=username_descending', methods=['GET', 'POST'])
 def user_list_descend():
 	return order_by(User.username)
 
-############ ROUTE BY EMAIL DESCENDING ############
+# Method to route by email address alphabetically DESCENDING
 @app.route('/accounts/sort?=email_descending', methods=['GET', 'POST'])
 def user_list_e_descend():
 	return order_by(User.email)
 
-############ ROUTE BY EMAIL ASCENDING ############
+# Method to route by email address alphabetically ASCENDING
 @app.route('/accounts/sort?=email_ascending', methods=['GET', 'POST'])
 def user_list_e_ascend():
 	return order_by(User.email.desc())
 
-############ ROUTE BY DATE ADDED LONGEST AGO ############
+# Method to route by user added LONGEST ago
 @app.route('/accounts/sort?=dateadded_longest', methods=['GET', 'POST'])
 def user_list_dateadded_longest():
 	return order_by(User.timeadded)
 
-############ ROUTE BY DATE ADDED LEAST AGO ############
+# Method to route by user added MOST recently
 @app.route('/accounts/sort?=dateadded_shortest', methods=['GET', 'POST'])
 def user_list_dateadded_shortest():
 	return order_by(User.timeadded.desc())
 
-############ ROUTE BY LAST LOGIN MOST RECENT ############
+# Method to route by logins that were MOST recent
 @app.route('/accounts/sort?=login_mostrecent', methods=['GET', 'POST'])
 def user_list_login_mostrecent():
 	return order_by(User.lastlogin.desc())
 
-############ ROUTE BY LAST LOGIN LEAST RECENT ############
+# Method to route by logins that were LEAST recent
 @app.route('/accounts/sort?=login_leastrecent', methods=['GET', 'POST'])
 def user_list_login_leastrecent():
 	return order_by(User.lastlogin)

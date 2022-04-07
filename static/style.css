@@ -1,8 +1,7 @@
-/************************************************************
-  Style sheet for virtual library website
+/**********************
   Matthew Klaczak
   mck70@pitt.edu
-*************************************************************/
+***********************/
 
 * {
 	box-sizing: border-box;
@@ -98,8 +97,8 @@ nav > ul > li {
 	padding: 0 0.5em;
 }
 
-/* The A ~ B selector means "select any B that comes after an A. In this case,
-it selects all list items *except the first* inside the navbar's list. */
+/* The A ~ B = select any B that comes after an A
+  selects all list items *except the first* inside the navbar's list */
 nav > ul > li ~ li {
 	border-left: 1px solid #444;
 }
@@ -109,13 +108,12 @@ nav > ul > li ~ li {
 *************************************************************/
 
 input, button {
-	/* "inherit" means "whatever the enclosing element's font size is."
-	Actually most (all?) CSS properties can be "inherit"! */
+	/* inherit whatever the enclosing element's font size is */
 	font-size: inherit;
 }
 
 
-/* This is an attribute selector. Very useful for styling inputs. */
+/* Attribute selector for styling inputs */
 input[type="text"], input[type="password"] {
 	border-radius: 5px;
 }
